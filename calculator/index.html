@@ -1,0 +1,65 @@
+class Calculator {
+  constructor(display) {
+    this.display = display;
+  }
+
+  append(value) {
+    if (this.display) {
+      this.display.value += value;
+    } else {
+      console.error("Display element not found");
+    }
+  }
+
+  clearDisplay() {
+    if (this.display) {
+      this.display.value = '';
+    } else {
+      console.error("Display element not found");
+    }
+  }
+
+  calculate() {
+    try {
+      const result = this.evaluateExpression(this.display.value);
+      this.display.value = result;
+    } catch (error) {
+      this.display.value = 'Error';
+      console.error("Calculation error:", error);
+    }
+  }
+
+  evaluateExpression(expression) {
+    // Implement your own parser or use a library
+    // For simplicity, let's just support basic arithmetic operations
+    const tokens = expression.match(/(\d+|\+|-|\*|\/)/g);
+    let result = parseFloat(tokens[0]);
+    for (let i = 1; i < tokens.length; i += 2) {
+      const operator = tokens[i];
+      const operand = parseFloat(tokens[i + 1]);
+      switch (operator) {
+        case '+':
+          result += operand;
+          break;
+        case '-':
+          result -= operand;
+          break;
+        case '*':
+          result *= operand;
+          break;
+        case '/':
+          if (operand === 0) {
+            throw new Error("Division by zero");
+          }
+          result /= operand;
+          break;
+        default:
+          throw new Error(`Unsupported operator: ${operator}`);
+      }
+    }
+    return result;
+  }
+}
+
+const display = document.getElementById('display');
+const calculator = new Calculator(display);
